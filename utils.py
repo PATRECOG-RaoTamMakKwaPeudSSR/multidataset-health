@@ -242,13 +242,24 @@ def set_unscaled_combined(df: pd.DataFrame):
     df.to_csv(f'data/unscaled/combined/{dataset_name}.csv', index=False)
     
 def set_preprocessed(df: pd.DataFrame, dataset_name: str, scaler: MinMaxScaler, scaler_name: str):
+    if dataset_name is None:
+        dataset_name = df.attrs.get('dataset_name', 'Unknown').lower()
+    
+    if scaler_name is None:
+        scaler_name = dataset_name
+    
     df.to_csv(f'data/processed/{dataset_name}.csv', index=False)
     scaler_file = f'scaler/{scaler_name}.pkl'
     with open(scaler_file, 'wb') as f:
         pickle.dump(scaler, f)
     
-def set_preprocessed_combined(df: pd.DataFrame, scaler: MinMaxScaler, scaler_name: str):
-    dataset_name = df.attrs.get('dataset_name', 'Combined').lower()
+def set_preprocessed_combined(df: pd.DataFrame, dataset_name: str, scaler: MinMaxScaler, scaler_name: str):
+    if dataset_name is None:
+        dataset_name = df.attrs.get('dataset_name', 'Unknown').lower()
+    
+    if scaler_name is None:
+        scaler_name = dataset_name
+    
     df.to_csv(f'data/processed/combined/{dataset_name}.csv', index=False)
     scaler_file = f'scaler/combined/{scaler_name}.pkl'
     with open(scaler_file, 'wb') as f:
@@ -256,20 +267,24 @@ def set_preprocessed_combined(df: pd.DataFrame, scaler: MinMaxScaler, scaler_nam
         
 def get_unscaled(dataset_name: str) -> pd.DataFrame:
     df = pd.read_csv(f'data/unscaled/{dataset_name}.csv')
+    df.attrs['dataset_name'] = dataset_name
     return df
 
 def get_unscaled_combined(dataset_name: str) -> pd.DataFrame:
     df = pd.read_csv(f'data/unscaled/combined/{dataset_name}.csv')
+    df.attrs['dataset_name'] = dataset_name
     return df
 
 def get_preprocessed(dataset_name: str, scaler_name: str) -> tuple:
     df = pd.read_csv(f'data/processed/{dataset_name}.csv')
+    df.attrs['dataset_name'] = dataset_name
     with open(f'scaler/{scaler_name}.pkl', 'rb') as f:
         scaler = pickle.load(f)
     return df, scaler
 
 def get_preprocessed_combined(dataset_name: str, scaler_name: str) -> pd.DataFrame:
     df = pd.read_csv(f'data/processed/combined/{dataset_name}.csv')
+    df.attrs['dataset_name'] = dataset_name
     with open(f'scaler/combined/{scaler_name}.pkl', 'rb') as f:
         scaler = pickle.load(f)
     return df, scaler
