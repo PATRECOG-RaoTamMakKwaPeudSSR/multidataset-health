@@ -1,5 +1,10 @@
 __pycache__
 
 scaler/*.pkl
-data/combined/*.csv
-data/preprocessed/*.csv
+scaler/combined/*.pkl
+
+data/unscaled/combined/*.csv
+data/unscaled/*.csv
+
+data/processed/*.csv
+data/processed/combined/*.csv

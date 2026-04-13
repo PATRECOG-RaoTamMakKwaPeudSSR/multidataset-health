@@ -4,8 +4,10 @@ import seaborn as sns
 from sklearn.preprocessing import MinMaxScaler
 import pickle
 
-def preprocess_statlog(df: pd.DataFrame) -> tuple:
+def preprocess_statlog(df: pd.DataFrame, scale: bool) -> tuple:
     df_new = df.copy()
+    
+    df_new.attrs['dataset_name'] = 'Statlog'
     
     # Step 1: Rename columns
     df_new.rename(columns={
@@ -31,16 +33,19 @@ def preprocess_statlog(df: pd.DataFrame) -> tuple:
     df_new.drop_duplicates(inplace=True)
     
     # Step 5: Scale continuous features to [0, 1]
+    if not scale:
+        return df_new, None
+    
     cont_cols = ['age', 'sbp', 'chol', 'hr', 'oldpeak']
     scaler = MinMaxScaler()
     df_new[cont_cols] = scaler.fit_transform(df_new[cont_cols])
     
-    df_new.attrs['dataset_name'] = 'Statlog'
-    
     return df_new, scaler
 
-def preprocess_chd(df: pd.DataFrame) -> tuple:
+def preprocess_chd(df: pd.DataFrame, scale: bool) -> tuple:
     df_new = df.copy()
+    
+    df_new.attrs['dataset_name'] = 'CHD'
         
     # Step 1: Map values
     df_new['famhist'] = df_new['famhist'].map({'Present': 1, 'Absent': 0})
@@ -55,16 +60,19 @@ def preprocess_chd(df: pd.DataFrame) -> tuple:
     df_new.drop_duplicates(inplace=True)
     
     # Step 4: Scale continuous features to [0, 1]
+    if not scale:
+        return df_new, None
+    
     cont_cols = ['sbp', 'tobacco', 'ldl', 'adiposity', 'typea', 'bmi', 'alcohol', 'age']
     scaler = MinMaxScaler()
     df_new[cont_cols] = scaler.fit_transform(df_new[cont_cols])
     
-    df_new.attrs['dataset_name'] = 'CHD'
-    
     return df_new, scaler
 
-def preprocess_framingham(df: pd.DataFrame) -> tuple:
+def preprocess_framingham(df: pd.DataFrame, scale: bool) -> tuple:
     df_new: pd.DataFrame = df.copy()
+    
+    df_new.attrs['dataset_name'] = 'Framingham'
     
     # Step 1: Rename columns
     df_new.rename(columns={
@@ -112,16 +120,19 @@ def preprocess_framingham(df: pd.DataFrame) -> tuple:
     df_new.drop_duplicates(inplace=True)
     
     # Step 6: Scale continuous features to [0, 1]
+    if not scale:
+        return df_new, None
+    
     cont_cols = ['age', 'num_cigs_per_day', 'chol', 'sbp', 'dbp', 'bmi', 'hr', 'glucose_level']
     scaler = MinMaxScaler()
     df_new[cont_cols] = scaler.fit_transform(df_new[cont_cols])
     
-    df_new.attrs['dataset_name'] = 'Framingham'
-    
     return df_new, scaler
 
-def preprocess_heart(df: pd.DataFrame) -> tuple:
+def preprocess_heart(df: pd.DataFrame, scale: bool) -> tuple:
     df_new = df.copy()
+    
+    df_new.attrs['dataset_name'] = 'Heart'
     
     # Step 1: Rename columns
     df_new.rename(columns={
@@ -141,16 +152,19 @@ def preprocess_heart(df: pd.DataFrame) -> tuple:
     df_new.drop_duplicates(inplace=True)
 
     # Step 4: Scale continuous features to [0, 1]
+    if not scale:
+        return df_new, None
+    
     cont_cols = ['age', 'sbp', 'chol', 'hr', 'oldpeak']
     scaler = MinMaxScaler()
     df_new[cont_cols] = scaler.fit_transform(df_new[cont_cols])
     
-    df_new.attrs['dataset_name'] = 'Heart'
-    
     return df_new, scaler
 
-def preprocess_stroke(df: pd.DataFrame) -> tuple:
+def preprocess_stroke(df: pd.DataFrame, scale: bool) -> tuple:
     df_new: pd.DataFrame = df.copy()
+    
+    df_new.attrs['dataset_name'] = 'Stroke'
     
     # Step 0: Drop 'id' column
     df_new.drop(columns=['id'], inplace=True)
@@ -182,18 +196,19 @@ def preprocess_stroke(df: pd.DataFrame) -> tuple:
     # Step 3: Convert types
     df_new['sex'] = df_new['sex'].astype(int)
     
-    # Step 3: Handle missing values
+    # Step 4: Handle missing values
     df_new["bmi"] = df_new["bmi"].fillna(df_new["bmi"].mean())
 
-    # Step 4: Drop duplicates
+    # Step 5: Drop duplicates
     df_new.drop_duplicates(inplace=True)
     
-    # Step 5: Scale continuous features to [0, 1]
+    # Step 6: Scale continuous features to [0, 1]
+    if not scale:
+        return df_new, None
+    
     cont_cols = ["age", "glucose_level", "bmi"]
     scaler = MinMaxScaler()
     df_new[cont_cols] = scaler.fit_transform(df_new[cont_cols])
-    
-    df_new.attrs['dataset_name'] = 'Stroke'
     
     return df_new, scaler
 
@@ -219,25 +234,45 @@ def plot_numerical_heatmap(df: pd.DataFrame, numerical_cols: list):
     plt.title(f'Correlation Heatmap of Numerical Features in {df.attrs.get("dataset_name", "Unknown")} Dataset')
     plt.show()
     
+def set_unscaled(df: pd.DataFrame, dataset_name: str) -> None:
+    df.to_csv(f'data/unscaled/{dataset_name}.csv', index=False)
+    
+def set_unscaled_combined(df: pd.DataFrame) -> None:
+    dataset_name = df.attrs.get('dataset_name', 'Combined').lower()
+    df.to_csv(f'data/unscaled/combined/{dataset_name}.csv', index=False)
+    
 def set_preprocessed(df: pd.DataFrame, dataset_name: str, scaler: MinMaxScaler, scaler_name: str) -> pd.DataFrame:
-    df.to_csv(f'data/preprocessed/{dataset_name}.csv', index=False)
+    df.to_csv(f'data/processed/{dataset_name}.csv', index=False)
     scaler_file = f'scaler/{scaler_name}.pkl'
     with open(scaler_file, 'wb') as f:
         pickle.dump(scaler, f)
-        
-def set_combined(df: pd.DataFrame) -> pd.DataFrame:
-    dataset_name = df.attrs.get('dataset_name', 'Combined').lower()
-    df.to_csv(f'data/combined/{dataset_name}.csv', index=False)
     
+def set_preprocessed_combined(df: pd.DataFrame, scaler: MinMaxScaler, scaler_name: str) -> pd.DataFrame:
+    dataset_name = df.attrs.get('dataset_name', 'Combined').lower()
+    df.to_csv(f'data/processed/combined/{dataset_name}.csv', index=False)
+    scaler_file = f'scaler/combined/{scaler_name}.pkl'
+    with open(scaler_file, 'wb') as f:
+        pickle.dump(scaler, f)
+        
+def get_unscaled(dataset_name: str) -> pd.DataFrame:
+    df = pd.read_csv(f'data/unscaled/{dataset_name}.csv')
+    return df
+
+def get_unscaled_combined(dataset_name: str) -> tuple:
+    df = pd.read_csv(f'data/unscaled/combined/{dataset_name}.csv')
+    return df
+
 def get_preprocessed(dataset_name: str, scaler_name: str) -> tuple:
-    df = pd.read_csv(f'data/preprocessed/{dataset_name}.csv')
+    df = pd.read_csv(f'data/processed/{dataset_name}.csv')
     with open(f'scaler/{scaler_name}.pkl', 'rb') as f:
         scaler = pickle.load(f)
     return df, scaler
 
-def get_combined(dataset_name: str) -> pd.DataFrame:
-    df = pd.read_csv(f'data/combined/{dataset_name}.csv')
-    return df
+def get_preprocessed_combined(dataset_name: str, scaler_name: str) -> pd.DataFrame:
+    df = pd.read_csv(f'data/raw/combined/{dataset_name}.csv')
+    with open(f'scaler/combined/{scaler_name}.pkl', 'rb') as f:
+        scaler = pickle.load(f)
+    return df, scaler
 
 def combine_datasets_union(df1: pd.DataFrame, df2: pd.DataFrame, dataset_name: str) -> pd.DataFrame:
     combined_df = pd.concat([df1, df2], ignore_index=True)
