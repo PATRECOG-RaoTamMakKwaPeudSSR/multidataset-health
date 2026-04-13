@@ -234,20 +234,20 @@ def plot_numerical_heatmap(df: pd.DataFrame, numerical_cols: list):
     plt.title(f'Correlation Heatmap of Numerical Features in {df.attrs.get("dataset_name", "Unknown")} Dataset')
     plt.show()
     
-def set_unscaled(df: pd.DataFrame, dataset_name: str) -> None:
+def set_unscaled(df: pd.DataFrame, dataset_name: str):
     df.to_csv(f'data/unscaled/{dataset_name}.csv', index=False)
     
-def set_unscaled_combined(df: pd.DataFrame) -> None:
+def set_unscaled_combined(df: pd.DataFrame):
     dataset_name = df.attrs.get('dataset_name', 'Combined').lower()
     df.to_csv(f'data/unscaled/combined/{dataset_name}.csv', index=False)
     
-def set_preprocessed(df: pd.DataFrame, dataset_name: str, scaler: MinMaxScaler, scaler_name: str) -> pd.DataFrame:
+def set_preprocessed(df: pd.DataFrame, dataset_name: str, scaler: MinMaxScaler, scaler_name: str):
     df.to_csv(f'data/processed/{dataset_name}.csv', index=False)
     scaler_file = f'scaler/{scaler_name}.pkl'
     with open(scaler_file, 'wb') as f:
         pickle.dump(scaler, f)
     
-def set_preprocessed_combined(df: pd.DataFrame, scaler: MinMaxScaler, scaler_name: str) -> pd.DataFrame:
+def set_preprocessed_combined(df: pd.DataFrame, scaler: MinMaxScaler, scaler_name: str):
     dataset_name = df.attrs.get('dataset_name', 'Combined').lower()
     df.to_csv(f'data/processed/combined/{dataset_name}.csv', index=False)
     scaler_file = f'scaler/combined/{scaler_name}.pkl'
@@ -258,7 +258,7 @@ def get_unscaled(dataset_name: str) -> pd.DataFrame:
     df = pd.read_csv(f'data/unscaled/{dataset_name}.csv')
     return df
 
-def get_unscaled_combined(dataset_name: str) -> tuple:
+def get_unscaled_combined(dataset_name: str) -> pd.DataFrame:
     df = pd.read_csv(f'data/unscaled/combined/{dataset_name}.csv')
     return df
 
@@ -269,7 +269,7 @@ def get_preprocessed(dataset_name: str, scaler_name: str) -> tuple:
     return df, scaler
 
 def get_preprocessed_combined(dataset_name: str, scaler_name: str) -> pd.DataFrame:
-    df = pd.read_csv(f'data/raw/combined/{dataset_name}.csv')
+    df = pd.read_csv(f'data/processed/combined/{dataset_name}.csv')
     with open(f'scaler/combined/{scaler_name}.pkl', 'rb') as f:
         scaler = pickle.load(f)
     return df, scaler
