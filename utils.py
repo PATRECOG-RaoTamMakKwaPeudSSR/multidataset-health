@@ -224,12 +224,20 @@ def set_preprocessed(df: pd.DataFrame, dataset_name: str, scaler: MinMaxScaler, 
     scaler_file = f'scaler/{scaler_name}.pkl'
     with open(scaler_file, 'wb') as f:
         pickle.dump(scaler, f)
+        
+def set_combined(df: pd.DataFrame) -> pd.DataFrame:
+    dataset_name = df.attrs.get('dataset_name', 'Combined').lower()
+    df.to_csv(f'data/combined/{dataset_name}.csv', index=False)
     
 def get_preprocessed(dataset_name: str, scaler_name: str) -> tuple:
     df = pd.read_csv(f'data/preprocessed/{dataset_name}.csv')
     with open(f'scaler/{scaler_name}.pkl', 'rb') as f:
         scaler = pickle.load(f)
     return df, scaler
+
+def get_combined(dataset_name: str) -> pd.DataFrame:
+    df = pd.read_csv(f'data/combined/{dataset_name}.csv')
+    return df
 
 def combine_datasets_union(df1: pd.DataFrame, df2: pd.DataFrame, dataset_name: str) -> pd.DataFrame:
     combined_df = pd.concat([df1, df2], ignore_index=True)
