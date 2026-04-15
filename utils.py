@@ -222,7 +222,7 @@ def plot_categorical_distributions(df: pd.DataFrame, categorical_cols: list, nco
     axes = axes.flatten()
     
     for i, col in enumerate(categorical_cols):
-        sns.countplot(x=col, data=df, ax=axes[i])
+        sns.countplot(y=col, data=df, ax=axes[i])
         axes[i].set_title(f'{col}')
         axes[i].set_xlabel('')
     
