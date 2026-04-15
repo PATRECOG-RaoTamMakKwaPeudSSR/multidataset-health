@@ -1,4 +1,8 @@
+# ===========================================================================
+# PREPROCESS
+
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.preprocessing import MinMaxScaler
@@ -218,7 +222,7 @@ def plot_categorical_distributions(df: pd.DataFrame, categorical_cols: list, nco
     axes = axes.flatten()
     
     for i, col in enumerate(categorical_cols):
-        sns.countplot(x=col, data=df, ax=axes[i])
+        sns.countplot(y=col, data=df, ax=axes[i])
         axes[i].set_title(f'{col}')
         axes[i].set_xlabel('')
     
@@ -301,3 +305,70 @@ def combine_datasets_intersection(df1: pd.DataFrame, df2: pd.DataFrame, dataset_
     combined_df.drop_duplicates(inplace=True)
     combined_df.attrs['dataset_name'] = dataset_name
     return combined_df
+
+# ===========================================================================
+# TRAIN
+
+import os
+import joblib
+from sklearn.model_selection import StratifiedKFold, cross_validate
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier
+
+RANDOM_STATE = 42
+N_SPLITS = 5
+MODEL_DIR = "model"
+
+def split_xy(df: pd.DataFrame, target_col: str = "target"):
+    if target_col is None or target_col not in df.columns:
+        raise ValueError("Cannot find target column")
+
+    X = df.drop(columns=[target_col])
+    y = df[target_col]
+    return X, y
+
+def evaluate_and_fit(name: str, estimator, X, y, cv: StratifiedKFold, scoring: dict = None):
+    cv_res = cross_validate(
+        estimator, X, y,
+        scoring=scoring,
+        cv=cv,
+        n_jobs=-1,
+        return_train_score=False,
+    )
+
+    summary = {k: (np.mean(v), np.std(v)) for k, v in cv_res.items() if k.startswith("test_")}
+    for metric, (m, s) in summary.items():
+        print(f"{name:>12} - {metric.replace('test_', ''):>9}: {m:.4f} ± {s:.4f}")
+
+    estimator.fit(X, y)
+
+    model_path = os.path.join(MODEL_DIR, f"{name}.joblib")
+    joblib.dump(estimator, model_path)
+
+    return summary
+
+def train_dataset(dataset_name: str, df: pd.DataFrame, scaler: MinMaxScaler, cv: StratifiedKFold = None, scoring: dict = None):
+    X, y = split_xy(df)
+
+    scaler_path = os.path.join(MODEL_DIR, f"{dataset_name}_scaler.joblib")
+    joblib.dump(scaler, scaler_path)
+
+    models = {
+        "logreg": LogisticRegression(max_iter=2000, random_state=RANDOM_STATE),
+        "knn": KNeighborsClassifier(n_neighbors=5),
+        "decision_tree": DecisionTreeClassifier(random_state=RANDOM_STATE),
+        "svm": SVC(kernel="rbf", probability=True, random_state=RANDOM_STATE),
+        "naive_bayes": GaussianNB(),
+        "random_forest": RandomForestClassifier(n_estimators=300, random_state=RANDOM_STATE, n_jobs=-1),
+    }
+
+    results = {}
+    for model_name, est in models.items():
+        full_name = f"{dataset_name}_{model_name}"
+        results[full_name] = evaluate_and_fit(full_name, est, X, y, cv, scoring)
+
+    return results
