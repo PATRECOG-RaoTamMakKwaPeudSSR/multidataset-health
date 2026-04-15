@@ -10,3 +10,5 @@ data/processed/*.csv
 data/processed/combined/*.csv
 
 model/*.joblib
+
+result/*.csv
