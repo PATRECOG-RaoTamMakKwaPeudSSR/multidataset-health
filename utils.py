@@ -318,6 +318,8 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.svm import SVC
 from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
+from xgboost import XGBClassifier
+from lightgbm import LGBMClassifier
 
 RANDOM_STATE = 42
 N_SPLITS = 5
@@ -364,6 +366,8 @@ def train_dataset(dataset_name: str, df: pd.DataFrame, scaler: MinMaxScaler, cv:
         "svm": SVC(kernel="rbf", probability=True, random_state=RANDOM_STATE),
         "naive_bayes": GaussianNB(),
         "random_forest": RandomForestClassifier(n_estimators=300, random_state=RANDOM_STATE, n_jobs=-1),
+        "xgb": XGBClassifier(n_estimators=300, random_state=RANDOM_STATE, n_jobs=-1, eval_metric="logloss", verbosity=0),
+        "lightgbm": LGBMClassifier(n_estimators=300, random_state=RANDOM_STATE, n_jobs=-1, verbosity=-1),
     }
 
     results = {}
