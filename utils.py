@@ -300,6 +300,107 @@ def preprocess_heart_stroke_union(df: pd.DataFrame):
     return df_new, scaler
 # =====
 
+# =====
+# trustmebro
+def preprocess_framingham_heart_union(df: pd.DataFrame):
+    df_processed = df.copy()
+    known_cats = ['edu', 'smoking_status', 'bp_status', 'stroke_status', 
+                  'hypertension_status', 'diabetes_status', 'sex']
+    categorical_cols = [col for col in known_cats if col in df_processed.columns]
+    numeric_cols = [col for col in df_processed.columns 
+                    if col not in categorical_cols and col != 'target']
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = SimpleImputer(strategy='median').fit_transform(df_processed[numeric_cols])
+    if len(categorical_cols) > 0:
+        df_processed[categorical_cols] = SimpleImputer(strategy='most_frequent').fit_transform(df_processed[categorical_cols])
+    scaler = MinMaxScaler()
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = scaler.fit_transform(df_processed[numeric_cols])
+    return df_processed, scaler
+
+def preprocess_framingham_heart_intersection(df: pd.DataFrame):
+    df_processed = df.copy()
+    numeric_cols = df_processed.select_dtypes(include=['number']).columns
+    scaler = MinMaxScaler()
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = scaler.fit_transform(df_processed[numeric_cols])
+    return df_processed, scaler
+
+def preprocess_chd_stroke_union(df: pd.DataFrame):
+    df_processed = df.copy()
+    known_cats = ['sex', 'hypertension_status', 'heart_disease_status', 
+                  'marital_status', 'work_type', 'residence_type', 'smoking_status']
+    categorical_cols = [col for col in known_cats if col in df_processed.columns]
+    numeric_cols = [col for col in df_processed.columns 
+                    if col not in categorical_cols and col != 'target']
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = SimpleImputer(strategy='median').fit_transform(df_processed[numeric_cols])
+    if len(categorical_cols) > 0:
+        df_processed[categorical_cols] = SimpleImputer(strategy='most_frequent').fit_transform(df_processed[categorical_cols])
+    scaler = MinMaxScaler()
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = scaler.fit_transform(df_processed[numeric_cols])
+    return df_processed, scaler
+
+def preprocess_chd_stroke_intersection(df: pd.DataFrame):
+    df_processed = df.copy()
+    numeric_cols = df_processed.select_dtypes(include=['number']).columns
+    scaler = MinMaxScaler()
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = scaler.fit_transform(df_processed[numeric_cols])
+    return df_processed, scaler
+
+def preprocess_chd_heart_stroke_union(df: pd.DataFrame):
+    df_processed = df.copy()
+    known_cats = ['sex', 'hypertension_status', 'heart_disease_status', 
+                  'marital_status', 'work_type', 'residence_type', 'smoking_status']
+    categorical_cols = [col for col in known_cats if col in df_processed.columns]
+    numeric_cols = [col for col in df_processed.columns 
+                    if col not in categorical_cols and col != 'target']
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = SimpleImputer(strategy='median').fit_transform(df_processed[numeric_cols])
+    if len(categorical_cols) > 0:
+        df_processed[categorical_cols] = SimpleImputer(strategy='most_frequent').fit_transform(df_processed[categorical_cols])
+    scaler = MinMaxScaler()
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = scaler.fit_transform(df_processed[numeric_cols])
+    return df_processed, scaler
+
+def preprocess_chd_heart_stroke_intersection(df: pd.DataFrame):
+    df_processed = df.copy()
+    numeric_cols = df_processed.select_dtypes(include=['number']).columns
+    scaler = MinMaxScaler()
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = scaler.fit_transform(df_processed[numeric_cols])
+    return df_processed, scaler
+
+def preprocess_framingham_heart_stroke_union(df: pd.DataFrame):
+    df_processed = df.copy()
+    known_cats = ['edu', 'smoking_status', 'bp_status', 'stroke_status',
+                  'hypertension_status', 'diabetes_status', 
+                  'heart_disease_status', 'marital_status', 
+                  'work_type', 'residence_type', 'sex']
+    categorical_cols = [col for col in known_cats if col in df_processed.columns]
+    numeric_cols = [col for col in df_processed.columns 
+                    if col not in categorical_cols and col != 'target']
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = SimpleImputer(strategy='median').fit_transform(df_processed[numeric_cols])
+    if len(categorical_cols) > 0:
+        df_processed[categorical_cols] = SimpleImputer(strategy='most_frequent').fit_transform(df_processed[categorical_cols])
+    scaler = MinMaxScaler()
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = scaler.fit_transform(df_processed[numeric_cols])
+    return df_processed, scaler
+
+def preprocess_framingham_heart_stroke_intersection(df: pd.DataFrame):
+    df_processed = df.copy()
+    numeric_cols = df_processed.select_dtypes(include=['number']).columns
+    scaler = MinMaxScaler()
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = scaler.fit_transform(df_processed[numeric_cols])
+    return df_processed, scaler
+# =====
+
 def plot_categorical_distributions(df: pd.DataFrame, categorical_cols: list, ncols: int = 4):
     nrows = -(-len(categorical_cols) // ncols)  # ceiling division
     fig, axes = plt.subplots(nrows, ncols, figsize=(ncols * 3, nrows * 4))
