@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.impute import SimpleImputer
 import pickle
 
 def preprocess_statlog(df: pd.DataFrame, scale: bool) -> tuple:
@@ -215,6 +216,89 @@ def preprocess_stroke(df: pd.DataFrame, scale: bool) -> tuple:
     df_new[cont_cols] = scaler.fit_transform(df_new[cont_cols])
     
     return df_new, scaler
+
+# =====
+# Pete
+def preprocess_statlog_framingham_stroke_intersection(df: pd.DataFrame):
+    numeric_cols = df.select_dtypes(include=['number']).columns
+    df_new = df.copy()
+    scaler = MinMaxScaler()
+    df_new[numeric_cols] = scaler.fit_transform(df_new[numeric_cols])
+    return df_new, scaler
+
+def preprocess_statlog_framingham_stroke_union(df: pd.DataFrame):
+    df_new = df.copy()
+    drop_cols = ["cp_type", "fbs", "ecg", "angina", "oldpeak", "slope", "mv", "thal", "smoking_status", "hypertension_status", "bmi", "glucose_level"]
+    df_new = df_new.drop(columns=drop_cols)
+    mode_cols = ["bp_status", "stroke_status", "diabetes_status", "heart_disease_status", "marital_status", "residence_type", "work_type"]
+    df_new[mode_cols] = SimpleImputer(strategy="most_frequent").fit_transform(df_new[mode_cols])
+    med_cols = ["edu", "num_cigs_per_day"]
+    df_new[med_cols] = SimpleImputer(strategy="median").fit_transform(df_new[med_cols])
+    mean_cols = ["sbp", "chol", "hr", "dbp"]
+    df_new[mean_cols] = SimpleImputer(strategy="median").fit_transform(df_new[mean_cols])  # ใช้ median imputer ตาม pete.ipynb
+    cols = df_new.select_dtypes(include=["number"]).columns
+    scaler = MinMaxScaler()
+    df_new[cols] = scaler.fit_transform(df_new[cols])
+    return df_new, scaler
+
+def preprocess_framingham_stroke_intersection(df: pd.DataFrame):
+    numeric_cols = df.select_dtypes(include=['number']).columns
+    df_new = df.copy()
+    scaler = MinMaxScaler()
+    df_new[numeric_cols] = scaler.fit_transform(df_new[numeric_cols])
+    return df_new, scaler
+
+def preprocess_framingham_stroke_union(df: pd.DataFrame):
+    df_new = df.copy()
+    mode_cols = ["bp_status", "stroke_status", "diabetes_status", "heart_disease_status", "marital_status", "work_type", "residence_type"]
+    df_new[mode_cols] = SimpleImputer(strategy="most_frequent").fit_transform(df_new[mode_cols])
+    med_cols = ["edu", "num_cigs_per_day", "chol"]
+    df_new[med_cols] = SimpleImputer(strategy="median").fit_transform(df_new[med_cols])
+    mean_cols = ["sbp", "dbp", "hr"]
+    df_new[mean_cols] = SimpleImputer(strategy="mean").fit_transform(df_new[mean_cols])
+    cols = df_new.select_dtypes(include=['number']).columns
+    scaler = MinMaxScaler()
+    df_new[cols] = scaler.fit_transform(df_new[cols])
+    return df_new, scaler
+
+def preprocess_statlog_heart_stroke_intersection(df: pd.DataFrame):
+    numeric_cols = df.select_dtypes(include=['number']).columns
+    df_new = df.copy()
+    scaler = MinMaxScaler()
+    df_new[numeric_cols] = scaler.fit_transform(df_new[numeric_cols])
+    return df_new, scaler
+
+def preprocess_statlog_heart_stroke_union(df: pd.DataFrame):
+    df_new = df.copy()
+    drop_cols = ["cp_type", "sbp", "chol", "fbs", "ecg", "hr", "angina", "oldpeak", "slope", "mv", "thal"]
+    df_new = df_new.drop(columns=drop_cols)
+    mode_cols = ["hypertension_status", "heart_disease_status", "marital_status", "work_type", "residence_type", "smoking_status"]
+    df_new[mode_cols] = SimpleImputer(strategy="most_frequent").fit_transform(df_new[mode_cols])
+    mean_cols = ["glucose_level", "bmi"]
+    df_new[mean_cols] = SimpleImputer(strategy="mean").fit_transform(df_new[mean_cols])
+    cols = df_new.select_dtypes(include=['number']).columns
+    scaler = MinMaxScaler()
+    df_new[cols] = scaler.fit_transform(df_new[cols])
+    return df_new, scaler
+
+def preprocess_heart_stroke_intersection(df: pd.DataFrame):
+    numeric_cols = df.select_dtypes(include=['number']).columns
+    df_new = df.copy()
+    scaler = MinMaxScaler()
+    df_new[numeric_cols] = scaler.fit_transform(df_new[numeric_cols])
+    return df_new, scaler
+
+def preprocess_heart_stroke_union(df: pd.DataFrame):
+    df_new = df.copy()
+    mode_cols = ["cp_type", "fbs", "ecg", "angina", "slope", "thal", "hypertension_status", "heart_disease_status", "marital_status", "work_type", "residence_type", "smoking_status"]
+    df_new[mode_cols] = SimpleImputer(strategy="most_frequent").fit_transform(df_new[mode_cols])
+    mean_cols = ["sbp", "chol", "hr", "oldpeak", "mv", "glucose_level", "bmi"]
+    df_new[mean_cols] = SimpleImputer(strategy="mean").fit_transform(df_new[mean_cols])
+    cols = df_new.select_dtypes(include=['number']).columns
+    scaler = MinMaxScaler()
+    df_new[cols] = scaler.fit_transform(df_new[cols])
+    return df_new, scaler
+# =====
 
 def plot_categorical_distributions(df: pd.DataFrame, categorical_cols: list, ncols: int = 4):
     nrows = -(-len(categorical_cols) // ncols)  # ceiling division
