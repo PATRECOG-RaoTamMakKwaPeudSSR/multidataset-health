@@ -524,12 +524,12 @@ def preprocess_statlog_framingham_intersection(df: pd.DataFrame):
 # friend
 def preprocess_statlog_chd_heart_intersection(df: pd.DataFrame):
     list_cat = []
-    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "thal", "target"]:
         list_cat.append(i)
     for i in ["famhist", "target"]:
         if i not in list_cat:
             list_cat.append(i)
-    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "thal", "target"]:
         if i not in list_cat:
             list_cat.append(i)
 
@@ -542,20 +542,19 @@ def preprocess_statlog_chd_heart_intersection(df: pd.DataFrame):
 
     scaler = MinMaxScaler()
     scaled = df_processed.copy()
-    for col in df_processed.columns:
-        if col not in list_cat:
-            scaled[col] = scaler.fit_transform(scaled[[col]])
+    numeric_to_scale = [col for col in scaled.columns if col not in list_cat]
+    scaled[numeric_to_scale] = scaler.fit_transform(scaled[numeric_to_scale])
 
     return scaled, scaler
 
 def preprocess_statlog_chd_heart_union(df: pd.DataFrame):
     list_cat = []
-    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "thal", "target"]:
         list_cat.append(i)
     for i in ["famhist", "target"]:
         if i not in list_cat:
             list_cat.append(i)
-    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "thal", "target"]:
         if i not in list_cat:
             list_cat.append(i)
 
@@ -568,20 +567,19 @@ def preprocess_statlog_chd_heart_union(df: pd.DataFrame):
 
     scaler = MinMaxScaler()
     scaled = df_processed.copy()
-    for col in df_processed.columns:
-        if col not in list_cat:
-            scaled[col] = scaler.fit_transform(scaled[[col]])
+    numeric_to_scale = [col for col in scaled.columns if col not in list_cat]
+    scaled[numeric_to_scale] = scaler.fit_transform(scaled[numeric_to_scale])
 
     return scaled, scaler
 
 def preprocess_statlog_framingham_heart_intersection(df: pd.DataFrame):
     list_cat = []
-    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "thal", "target"]:
         list_cat.append(i)
     for i in ["sex", "edu", "smoking_status", "bp_status", "stroke_status", "hypertension_status", "diabetes_status", "target"]:
         if i not in list_cat:
             list_cat.append(i)
-    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "thal", "target"]:
         if i not in list_cat:
             list_cat.append(i)
 
@@ -594,20 +592,19 @@ def preprocess_statlog_framingham_heart_intersection(df: pd.DataFrame):
 
     scaler = MinMaxScaler()
     scaled = df_processed.copy()
-    for col in df_processed.columns:
-        if col not in list_cat:
-            scaled[col] = scaler.fit_transform(scaled[[col]])
+    numeric_to_scale = [col for col in scaled.columns if col not in list_cat]
+    scaled[numeric_to_scale] = scaler.fit_transform(scaled[numeric_to_scale])
 
     return scaled, scaler
 
 def preprocess_statlog_framingham_heart_union(df: pd.DataFrame):
     list_cat = []
-    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "thal", "target"]:
         list_cat.append(i)
     for i in ["sex", "edu", "smoking_status", "bp_status", "stroke_status", "hypertension_status", "diabetes_status", "target"]:
         if i not in list_cat:
             list_cat.append(i)
-    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "thal", "target"]:
         if i not in list_cat:
             list_cat.append(i)
 
@@ -620,17 +617,16 @@ def preprocess_statlog_framingham_heart_union(df: pd.DataFrame):
 
     scaler = MinMaxScaler()
     scaled = df_processed.copy()
-    for col in df_processed.columns:
-        if col not in list_cat:
-            scaled[col] = scaler.fit_transform(scaled[[col]])
+    numeric_to_scale = [col for col in scaled.columns if col not in list_cat]
+    scaled[numeric_to_scale] = scaler.fit_transform(scaled[numeric_to_scale])
 
     return scaled, scaler
 
 def preprocess_statlog_heart_intersection(df: pd.DataFrame):
     list_cat = []
-    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "thal", "target"]:
         list_cat.append(i)
-    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "thal", "target"]:
         if i not in list_cat:
             list_cat.append(i)
 
@@ -643,17 +639,16 @@ def preprocess_statlog_heart_intersection(df: pd.DataFrame):
 
     scaler = MinMaxScaler()
     scaled = df_processed.copy()
-    for col in df_processed.columns:
-        if col not in list_cat:
-            scaled[col] = scaler.fit_transform(scaled[[col]])
+    numeric_to_scale = [col for col in scaled.columns if col not in list_cat]
+    scaled[numeric_to_scale] = scaler.fit_transform(scaled[numeric_to_scale])
 
     return scaled, scaler
 
 def preprocess_statlog_heart_union(df: pd.DataFrame):
     list_cat = []
-    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "thal", "target"]:
         list_cat.append(i)
-    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "thal", "target"]:
         if i not in list_cat:
             list_cat.append(i)
 
@@ -666,17 +661,16 @@ def preprocess_statlog_heart_union(df: pd.DataFrame):
 
     scaler = MinMaxScaler()
     scaled = df_processed.copy()
-    for col in df_processed.columns:
-        if col not in list_cat:
-            scaled[col] = scaler.fit_transform(scaled[[col]])
+    numeric_to_scale = [col for col in scaled.columns if col not in list_cat]
+    scaled[numeric_to_scale] = scaler.fit_transform(scaled[numeric_to_scale])
 
     return scaled, scaler
 
 def preprocess_statlog_stroke_intersection(df: pd.DataFrame):
     list_cat = []
-    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "thal", "target"]:
         list_cat.append(i)
-    for i in ["sex", "hypertension_status", "heart_disease_status", "martial_status", "work_type", "resident_type", "smoking_status", "target"]:
+    for i in ["sex", "hypertension_status", "heart_disease_status", "marital_status", "work_type", "residence_type", "smoking_status", "target"]:
         if i not in list_cat:
             list_cat.append(i)
 
@@ -689,17 +683,16 @@ def preprocess_statlog_stroke_intersection(df: pd.DataFrame):
 
     scaler = MinMaxScaler()
     scaled = df_processed.copy()
-    for col in df_processed.columns:
-        if col not in list_cat:
-            scaled[col] = scaler.fit_transform(scaled[[col]])
+    numeric_to_scale = [col for col in scaled.columns if col not in list_cat]
+    scaled[numeric_to_scale] = scaler.fit_transform(scaled[numeric_to_scale])
 
     return scaled, scaler
 
 def preprocess_statlog_stroke_union(df: pd.DataFrame):
     list_cat = []
-    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "thal", "target"]:
         list_cat.append(i)
-    for i in ["sex", "hypertension_status", "heart_disease_status", "martial_status", "work_type", "resident_type", "smoking_status", "target"]:
+    for i in ["sex", "hypertension_status", "heart_disease_status", "marital_status", "work_type", "residence_type", "smoking_status", "target"]:
         if i not in list_cat:
             list_cat.append(i)
 
@@ -712,11 +705,154 @@ def preprocess_statlog_stroke_union(df: pd.DataFrame):
 
     scaler = MinMaxScaler()
     scaled = df_processed.copy()
-    for col in df_processed.columns:
-        if col not in list_cat:
-            scaled[col] = scaler.fit_transform(scaled[[col]])
+    numeric_to_scale = [col for col in scaled.columns if col not in list_cat]
+    scaled[numeric_to_scale] = scaler.fit_transform(scaled[numeric_to_scale])
 
     return scaled, scaler
+# =====
+
+# =====
+# wsuperwhalew
+def preprocess_chd_framingham_heart_union(df: pd.DataFrame):
+    df_processed = df.copy()
+
+    missing_fractions = df_processed.isnull().mean()
+    cols_to_drop = missing_fractions[missing_fractions > 0.75].index
+    if len(cols_to_drop) > 0:
+        df_processed.drop(columns=cols_to_drop, inplace=True)
+
+    numeric_cols = df_processed.select_dtypes(include=['number']).columns
+    categorical_cols = df_processed.select_dtypes(exclude=['number']).columns
+
+    if len(numeric_cols) > 0:
+        num_imputer = SimpleImputer(strategy='median')
+        df_processed[numeric_cols] = num_imputer.fit_transform(df_processed[numeric_cols])
+
+    if len(categorical_cols) > 0:
+        cat_imputer = SimpleImputer(strategy='most_frequent')
+        df_processed[categorical_cols] = cat_imputer.fit_transform(df_processed[categorical_cols])
+
+    scaler = MinMaxScaler()
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = scaler.fit_transform(df_processed[numeric_cols])
+
+    return df_processed, scaler
+
+def preprocess_chd_framingham_heart_intersection(df: pd.DataFrame):
+    df_processed = df.copy()
+    numeric_cols = df_processed.select_dtypes(include=['number']).columns
+
+    scaler = MinMaxScaler()
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = scaler.fit_transform(df_processed[numeric_cols])
+
+    return df_processed, scaler
+
+def preprocess_chd_framingham_stroke_union(df: pd.DataFrame):
+    df_processed = df.copy()
+
+    missing_fractions = df_processed.isnull().mean()
+    cols_to_drop = missing_fractions[missing_fractions > 0.75].index
+    if len(cols_to_drop) > 0:
+        df_processed.drop(columns=cols_to_drop, inplace=True)
+
+    numeric_cols = df_processed.select_dtypes(include=['number']).columns
+    categorical_cols = df_processed.select_dtypes(exclude=['number']).columns
+
+    if len(numeric_cols) > 0:
+        num_imputer = SimpleImputer(strategy='median')
+        df_processed[numeric_cols] = num_imputer.fit_transform(df_processed[numeric_cols])
+
+    if len(categorical_cols) > 0:
+        cat_imputer = SimpleImputer(strategy='most_frequent')
+        df_processed[categorical_cols] = cat_imputer.fit_transform(df_processed[categorical_cols])
+
+    scaler = MinMaxScaler()
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = scaler.fit_transform(df_processed[numeric_cols])
+
+    return df_processed, scaler
+
+def preprocess_chd_framingham_stroke_intersection(df: pd.DataFrame):
+    df_processed = df.copy()
+    numeric_cols = df_processed.select_dtypes(include=['number']).columns
+
+    scaler = MinMaxScaler()
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = scaler.fit_transform(df_processed[numeric_cols])
+
+    return df_processed, scaler
+
+def preprocess_chd_framingham_union(df: pd.DataFrame):
+    df_processed = df.copy()
+
+    missing_fractions = df_processed.isnull().mean()
+    cols_to_drop = missing_fractions[missing_fractions > 0.75].index
+    if len(cols_to_drop) > 0:
+        df_processed.drop(columns=cols_to_drop, inplace=True)
+
+    numeric_cols = df_processed.select_dtypes(include=['number']).columns
+    categorical_cols = df_processed.select_dtypes(exclude=['number']).columns
+
+    if len(numeric_cols) > 0:
+        num_imputer = SimpleImputer(strategy='median')
+        df_processed[numeric_cols] = num_imputer.fit_transform(df_processed[numeric_cols])
+
+    if len(categorical_cols) > 0:
+        cat_imputer = SimpleImputer(strategy='most_frequent')
+        df_processed[categorical_cols] = cat_imputer.fit_transform(df_processed[categorical_cols])
+
+    scaler = MinMaxScaler()
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = scaler.fit_transform(df_processed[numeric_cols])
+
+    return df_processed, scaler
+
+def preprocess_chd_framingham_intersection(df: pd.DataFrame):
+    df_processed = df.copy()
+    numeric_cols = df_processed.select_dtypes(include=['number']).columns
+
+    scaler = MinMaxScaler()
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = scaler.fit_transform(df_processed[numeric_cols])
+
+    return df_processed, scaler
+
+def preprocess_chd_heart_union(df: pd.DataFrame):
+    df_processed = df.copy()
+
+    missing_fractions = df_processed.isnull().mean()
+    cols_to_drop = missing_fractions[missing_fractions > 0.75].index
+    if len(cols_to_drop) > 0:
+        df_processed.drop(columns=cols_to_drop, inplace=True)
+
+    numeric_cols = df_processed.select_dtypes(include=['number']).columns
+    categorical_cols = df_processed.select_dtypes(exclude=['number']).columns
+
+    if len(numeric_cols) > 0:
+        num_imputer = SimpleImputer(strategy='median')
+        df_processed[numeric_cols] = num_imputer.fit_transform(df_processed[numeric_cols])
+
+    if len(categorical_cols) > 0:
+        cat_imputer = SimpleImputer(strategy='most_frequent')
+        df_processed[categorical_cols] = cat_imputer.fit_transform(df_processed[categorical_cols])
+
+    scaler = MinMaxScaler()
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = scaler.fit_transform(df_processed[numeric_cols])
+
+    return df_processed, scaler
+
+
+def preprocess_chd_heart_intersection(df: pd.DataFrame):
+    df_processed = df.copy()
+    numeric_cols = df_processed.select_dtypes(include=['number']).columns
+
+    scaler = MinMaxScaler()
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = scaler.fit_transform(df_processed[numeric_cols])
+
+    return df_processed, scaler
 # =====
 
 def plot_categorical_distributions(df: pd.DataFrame, categorical_cols: list, ncols: int = 4):
