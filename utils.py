@@ -401,6 +401,125 @@ def preprocess_framingham_heart_stroke_intersection(df: pd.DataFrame):
     return df_processed, scaler
 # =====
 
+# =====
+# muffinhead
+def preprocess_statlog_chd_stroke_union(df: pd.DataFrame):
+    df_processed = df.copy()
+    numeric_cols = df_processed.select_dtypes(include=['number']).columns
+    categorical_cols = df_processed.select_dtypes(exclude=['number']).columns
+
+    if len(numeric_cols) > 0:
+        num_imputer = SimpleImputer(strategy='median')
+        df_processed[numeric_cols] = num_imputer.fit_transform(df_processed[numeric_cols])
+
+    if len(categorical_cols) > 0:
+        cat_imputer = SimpleImputer(strategy='most_frequent')
+        df_processed[categorical_cols] = cat_imputer.fit_transform(df_processed[categorical_cols])
+
+    scaler = MinMaxScaler()
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = scaler.fit_transform(df_processed[numeric_cols])
+
+    return df_processed, scaler
+
+def preprocess_statlog_chd_stroke_intersection(df: pd.DataFrame):
+    df_processed = df.copy()
+    numeric_cols = df_processed.select_dtypes(include=['number']).columns
+
+    scaler = MinMaxScaler()
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = scaler.fit_transform(df_processed[numeric_cols])
+
+    return df_processed, scaler
+
+def preprocess_statlog_chd_framingham_union(df: pd.DataFrame):
+    df_processed = df.copy()
+    numeric_cols = df_processed.select_dtypes(include=['number']).columns
+    categorical_cols = df_processed.select_dtypes(exclude=['number']).columns
+
+    if len(numeric_cols) > 0:
+        num_imputer = SimpleImputer(strategy='median')
+        df_processed[numeric_cols] = num_imputer.fit_transform(df_processed[numeric_cols])
+
+    if len(categorical_cols) > 0:
+        cat_imputer = SimpleImputer(strategy='most_frequent')
+        df_processed[categorical_cols] = cat_imputer.fit_transform(df_processed[categorical_cols])
+
+    scaler = MinMaxScaler()
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = scaler.fit_transform(df_processed[numeric_cols])
+
+    return df_processed, scaler
+
+def preprocess_statlog_chd_framingham_intersection(df: pd.DataFrame):
+    df_processed = df.copy()
+    numeric_cols = df_processed.select_dtypes(include=['number']).columns
+
+    scaler = MinMaxScaler()
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = scaler.fit_transform(df_processed[numeric_cols])
+
+    return df_processed, scaler
+
+def preprocess_statlog_chd_union(df: pd.DataFrame):
+    df_processed = df.copy()
+    numeric_cols = df_processed.select_dtypes(include=['number']).columns
+    categorical_cols = df_processed.select_dtypes(exclude=['number']).columns
+
+    if len(numeric_cols) > 0:
+        num_imputer = SimpleImputer(strategy='median')
+        df_processed[numeric_cols] = num_imputer.fit_transform(df_processed[numeric_cols])
+
+    if len(categorical_cols) > 0:
+        cat_imputer = SimpleImputer(strategy='most_frequent')
+        df_processed[categorical_cols] = cat_imputer.fit_transform(df_processed[categorical_cols])
+
+    scaler = MinMaxScaler()
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = scaler.fit_transform(df_processed[numeric_cols])
+
+    return df_processed, scaler
+
+def preprocess_statlog_chd_intersection(df: pd.DataFrame):
+    df_processed = df.copy()
+    numeric_cols = df_processed.select_dtypes(include=['number']).columns
+
+    scaler = MinMaxScaler()
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = scaler.fit_transform(df_processed[numeric_cols])
+
+    return df_processed, scaler
+
+def preprocess_statlog_framingham_union(df: pd.DataFrame):
+    df_processed = df.copy()
+    numeric_cols = df_processed.select_dtypes(include=['number']).columns
+    categorical_cols = df_processed.select_dtypes(exclude=['number']).columns
+
+    if len(numeric_cols) > 0:
+        num_imputer = SimpleImputer(strategy='median')
+        df_processed[numeric_cols] = num_imputer.fit_transform(df_processed[numeric_cols])
+
+    if len(categorical_cols) > 0:
+        cat_imputer = SimpleImputer(strategy='most_frequent')
+        df_processed[categorical_cols] = cat_imputer.fit_transform(df_processed[categorical_cols])
+
+    scaler = MinMaxScaler()
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = scaler.fit_transform(df_processed[numeric_cols])
+
+    return df_processed, scaler
+
+def preprocess_statlog_framingham_intersection(df: pd.DataFrame):
+    df_processed = df.copy()
+    numeric_cols = df_processed.select_dtypes(include=['number']).columns
+
+    scaler = MinMaxScaler()
+    if len(numeric_cols) > 0:
+        df_processed[numeric_cols] = scaler.fit_transform(df_processed[numeric_cols])
+
+    return df_processed, scaler
+# =====
+
 def plot_categorical_distributions(df: pd.DataFrame, categorical_cols: list, ncols: int = 4):
     nrows = -(-len(categorical_cols) // ncols)  # ceiling division
     fig, axes = plt.subplots(nrows, ncols, figsize=(ncols * 3, nrows * 4))
