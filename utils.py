@@ -9,6 +9,8 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.impute import SimpleImputer
 import pickle
 
+RANDOM_STATE = 42
+
 def preprocess_statlog(df: pd.DataFrame, scale: bool) -> tuple:
     df_new = df.copy()
     
@@ -959,8 +961,9 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 from lightgbm import LGBMClassifier
+from imblearn.over_sampling import SMOTE
+from imblearn.pipeline import Pipeline as ImbPipeline
 
-RANDOM_STATE = 42
 N_SPLITS = 5
 MODEL_DIR = "model"
 
@@ -998,16 +1001,27 @@ def train_dataset(dataset_name: str, df: pd.DataFrame, scaler: MinMaxScaler, cv:
     scaler_path = os.path.join(MODEL_DIR, f"{dataset_name}_scaler.joblib")
     joblib.dump(scaler, scaler_path)
 
-    models = {
-        "logreg": LogisticRegression(max_iter=2000, random_state=RANDOM_STATE),
-        "knn": KNeighborsClassifier(n_neighbors=5),
-        "decision_tree": DecisionTreeClassifier(random_state=RANDOM_STATE),
-        "svm": SVC(kernel="rbf", probability=True, random_state=RANDOM_STATE),
-        "naive_bayes": GaussianNB(),
-        "random_forest": RandomForestClassifier(n_estimators=300, random_state=RANDOM_STATE, n_jobs=-1),
-        "xgb": XGBClassifier(n_estimators=300, random_state=RANDOM_STATE, n_jobs=-1, eval_metric="logloss", verbosity=0),
-        "lightgbm": LGBMClassifier(n_estimators=300, random_state=RANDOM_STATE, n_jobs=-1, verbosity=-1),
-    }
+    ratio = (y == 0).sum() / (y == 1).sum()
+    is_imbalanced = ratio >= 2.0
+
+    def make_models(imbalanced: bool):
+        def wrap(clf):
+            if imbalanced:
+                return ImbPipeline([("smote", SMOTE(random_state=RANDOM_STATE)), ("clf", clf)])
+            return clf
+
+        return {
+            "logreg": wrap(LogisticRegression(max_iter=2000, random_state=RANDOM_STATE)),
+            "knn": wrap(KNeighborsClassifier(n_neighbors=5)),
+            "decision_tree": wrap(DecisionTreeClassifier(random_state=RANDOM_STATE)),
+            "svm": wrap(SVC(kernel="rbf", probability=True, random_state=RANDOM_STATE)),
+            "naive_bayes": wrap(GaussianNB()),
+            "random_forest": wrap(RandomForestClassifier(n_estimators=300, random_state=RANDOM_STATE, n_jobs=-1)),
+            "xgb": wrap(XGBClassifier(n_estimators=300, random_state=RANDOM_STATE, n_jobs=-1, eval_metric="logloss", verbosity=0)),
+            "lightgbm": wrap(LGBMClassifier(n_estimators=300, random_state=RANDOM_STATE, n_jobs=-1, verbosity=-1)),
+        }
+
+    models = make_models(is_imbalanced)
 
     results = {}
     for model_name, est in models.items():
