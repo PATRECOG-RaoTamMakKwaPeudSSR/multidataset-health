@@ -520,6 +520,205 @@ def preprocess_statlog_framingham_intersection(df: pd.DataFrame):
     return df_processed, scaler
 # =====
 
+# =====
+# friend
+def preprocess_statlog_chd_heart_intersection(df: pd.DataFrame):
+    list_cat = []
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+        list_cat.append(i)
+    for i in ["famhist", "target"]:
+        if i not in list_cat:
+            list_cat.append(i)
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+        if i not in list_cat:
+            list_cat.append(i)
+
+    df_processed = df.copy()
+    for col in df_processed.columns:
+        if col in list_cat:
+            df_processed[col] = df_processed[col].fillna(df_processed[col].mode()[0])
+        else:
+            df_processed[col] = df_processed[col].fillna(df_processed[col].mean())
+
+    scaler = MinMaxScaler()
+    scaled = df_processed.copy()
+    for col in df_processed.columns:
+        if col not in list_cat:
+            scaled[col] = scaler.fit_transform(scaled[[col]])
+
+    return scaled, scaler
+
+def preprocess_statlog_chd_heart_union(df: pd.DataFrame):
+    list_cat = []
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+        list_cat.append(i)
+    for i in ["famhist", "target"]:
+        if i not in list_cat:
+            list_cat.append(i)
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+        if i not in list_cat:
+            list_cat.append(i)
+
+    df_processed = df.copy()
+    for col in df_processed.columns:
+        if col in list_cat:
+            df_processed[col] = df_processed[col].fillna(df_processed[col].mode()[0])
+        else:
+            df_processed[col] = df_processed[col].fillna(df_processed[col].mean())
+
+    scaler = MinMaxScaler()
+    scaled = df_processed.copy()
+    for col in df_processed.columns:
+        if col not in list_cat:
+            scaled[col] = scaler.fit_transform(scaled[[col]])
+
+    return scaled, scaler
+
+def preprocess_statlog_framingham_heart_intersection(df: pd.DataFrame):
+    list_cat = []
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+        list_cat.append(i)
+    for i in ["sex", "edu", "smoking_status", "bp_status", "stroke_status", "hypertension_status", "diabetes_status", "target"]:
+        if i not in list_cat:
+            list_cat.append(i)
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+        if i not in list_cat:
+            list_cat.append(i)
+
+    df_processed = df.copy()
+    for col in df_processed.columns:
+        if col in list_cat:
+            df_processed[col] = df_processed[col].fillna(df_processed[col].mode()[0])
+        else:
+            df_processed[col] = df_processed[col].fillna(df_processed[col].mean())
+
+    scaler = MinMaxScaler()
+    scaled = df_processed.copy()
+    for col in df_processed.columns:
+        if col not in list_cat:
+            scaled[col] = scaler.fit_transform(scaled[[col]])
+
+    return scaled, scaler
+
+def preprocess_statlog_framingham_heart_union(df: pd.DataFrame):
+    list_cat = []
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+        list_cat.append(i)
+    for i in ["sex", "edu", "smoking_status", "bp_status", "stroke_status", "hypertension_status", "diabetes_status", "target"]:
+        if i not in list_cat:
+            list_cat.append(i)
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+        if i not in list_cat:
+            list_cat.append(i)
+
+    df_processed = df.copy()
+    for col in df_processed.columns:
+        if col in list_cat:
+            df_processed[col] = df_processed[col].fillna(df_processed[col].mode()[0])
+        else:
+            df_processed[col] = df_processed[col].fillna(df_processed[col].mean())
+
+    scaler = MinMaxScaler()
+    scaled = df_processed.copy()
+    for col in df_processed.columns:
+        if col not in list_cat:
+            scaled[col] = scaler.fit_transform(scaled[[col]])
+
+    return scaled, scaler
+
+def preprocess_statlog_heart_intersection(df: pd.DataFrame):
+    list_cat = []
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+        list_cat.append(i)
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+        if i not in list_cat:
+            list_cat.append(i)
+
+    df_processed = df.copy()
+    for col in df_processed.columns:
+        if col in list_cat:
+            df_processed[col] = df_processed[col].fillna(df_processed[col].mode()[0])
+        else:
+            df_processed[col] = df_processed[col].fillna(df_processed[col].mean())
+
+    scaler = MinMaxScaler()
+    scaled = df_processed.copy()
+    for col in df_processed.columns:
+        if col not in list_cat:
+            scaled[col] = scaler.fit_transform(scaled[[col]])
+
+    return scaled, scaler
+
+def preprocess_statlog_heart_union(df: pd.DataFrame):
+    list_cat = []
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+        list_cat.append(i)
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+        if i not in list_cat:
+            list_cat.append(i)
+
+    df_processed = df.copy()
+    for col in df_processed.columns:
+        if col in list_cat:
+            df_processed[col] = df_processed[col].fillna(df_processed[col].mode()[0])
+        else:
+            df_processed[col] = df_processed[col].fillna(df_processed[col].mean())
+
+    scaler = MinMaxScaler()
+    scaled = df_processed.copy()
+    for col in df_processed.columns:
+        if col not in list_cat:
+            scaled[col] = scaler.fit_transform(scaled[[col]])
+
+    return scaled, scaler
+
+def preprocess_statlog_stroke_intersection(df: pd.DataFrame):
+    list_cat = []
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+        list_cat.append(i)
+    for i in ["sex", "hypertension_status", "heart_disease_status", "martial_status", "work_type", "resident_type", "smoking_status", "target"]:
+        if i not in list_cat:
+            list_cat.append(i)
+
+    df_processed = df.copy()
+    for col in df_processed.columns:
+        if col in list_cat:
+            df_processed[col] = df_processed[col].fillna(df_processed[col].mode()[0])
+        else:
+            df_processed[col] = df_processed[col].fillna(df_processed[col].mean())
+
+    scaler = MinMaxScaler()
+    scaled = df_processed.copy()
+    for col in df_processed.columns:
+        if col not in list_cat:
+            scaled[col] = scaler.fit_transform(scaled[[col]])
+
+    return scaled, scaler
+
+def preprocess_statlog_stroke_union(df: pd.DataFrame):
+    list_cat = []
+    for i in ["sex", "cp_type", "fbs", "ecg", "angina", "slope", "mv", "thal", "target"]:
+        list_cat.append(i)
+    for i in ["sex", "hypertension_status", "heart_disease_status", "martial_status", "work_type", "resident_type", "smoking_status", "target"]:
+        if i not in list_cat:
+            list_cat.append(i)
+
+    df_processed = df.copy()
+    for col in df_processed.columns:
+        if col in list_cat:
+            df_processed[col] = df_processed[col].fillna(df_processed[col].mode()[0])
+        else:
+            df_processed[col] = df_processed[col].fillna(df_processed[col].mean())
+
+    scaler = MinMaxScaler()
+    scaled = df_processed.copy()
+    for col in df_processed.columns:
+        if col not in list_cat:
+            scaled[col] = scaler.fit_transform(scaled[[col]])
+
+    return scaled, scaler
+# =====
+
 def plot_categorical_distributions(df: pd.DataFrame, categorical_cols: list, ncols: int = 4):
     nrows = -(-len(categorical_cols) // ncols)  # ceiling division
     fig, axes = plt.subplots(nrows, ncols, figsize=(ncols * 3, nrows * 4))
