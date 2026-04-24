@@ -1029,3 +1029,15 @@ def train_dataset(dataset_name: str, df: pd.DataFrame, scaler: MinMaxScaler, cv:
         results[full_name] = evaluate_and_fit(full_name, est, X, y, cv, scoring)
 
     return results
+
+def show_result(model_result_set: set):
+    return pd.DataFrame({
+        "dataset": ["_".join(k.split("_")[:-1]) for k in model_result_set.keys()],
+        "model": [k.split("_")[-1] for k in model_result_set.keys()],
+        'accuracy_mean': [v['test_accuracy'][0] for v in model_result_set.values()],
+        # 'precision_mean': [v['test_precision'][0] for v in model_result_set.values()],
+        # 'recall_mean': [v['test_recall'][0] for v in model_result_set.values()],
+        "f1_mean": [v['test_f1'][0] for v in model_result_set.values()],
+        "f1_macro_mean": [v['test_f1_macro'][0] for v in model_result_set.values()],
+        "recall_minority_mean": [v['test_recall_minority'][0] for v in model_result_set.values()],
+    })
