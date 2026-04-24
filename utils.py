@@ -985,8 +985,8 @@ def evaluate_and_fit(name: str, estimator, X, y, cv: StratifiedKFold, scoring: d
     )
 
     summary = {k: (np.mean(v), np.std(v)) for k, v in cv_res.items() if k.startswith("test_")}
-    for metric, (m, s) in summary.items():
-        print(f"{name:>12} - {metric.replace('test_', ''):>9}: {m:.4f} ± {s:.4f}")
+    # for metric, (m, s) in summary.items():
+    #     print(f"{name:>12} - {metric.replace('test_', ''):>9}: {m:.4f} ± {s:.4f}")
 
     estimator.fit(X, y)
 
@@ -1013,10 +1013,10 @@ def train_dataset(dataset_name: str, df: pd.DataFrame, scaler: MinMaxScaler, cv:
         return {
             "logreg": wrap(LogisticRegression(max_iter=2000, random_state=RANDOM_STATE)),
             "knn": wrap(KNeighborsClassifier(n_neighbors=5)),
-            "decision_tree": wrap(DecisionTreeClassifier(random_state=RANDOM_STATE)),
+            "decisiontree": wrap(DecisionTreeClassifier(random_state=RANDOM_STATE)),
             "svm": wrap(SVC(kernel="rbf", probability=True, random_state=RANDOM_STATE)),
-            "naive_bayes": wrap(GaussianNB()),
-            "random_forest": wrap(RandomForestClassifier(n_estimators=300, random_state=RANDOM_STATE, n_jobs=-1)),
+            "naivebayes": wrap(GaussianNB()),
+            "randomforest": wrap(RandomForestClassifier(n_estimators=300, random_state=RANDOM_STATE, n_jobs=-1)),
             "xgb": wrap(XGBClassifier(n_estimators=300, random_state=RANDOM_STATE, n_jobs=-1, eval_metric="logloss", verbosity=0)),
             "lightgbm": wrap(LGBMClassifier(n_estimators=300, random_state=RANDOM_STATE, n_jobs=-1, verbosity=-1)),
         }
@@ -1025,6 +1025,7 @@ def train_dataset(dataset_name: str, df: pd.DataFrame, scaler: MinMaxScaler, cv:
 
     results = {}
     for model_name, est in models.items():
+        print(f"Training {dataset_name} dataset with {model_name}.")
         full_name = f"{dataset_name}_{model_name}"
         results[full_name] = evaluate_and_fit(full_name, est, X, y, cv, scoring)
 
