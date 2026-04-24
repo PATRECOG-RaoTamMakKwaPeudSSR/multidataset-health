@@ -1042,3 +1042,11 @@ def show_result(model_result_set: set):
         "f1_macro_mean": [v['test_f1_macro'][0] for v in model_result_set.values()],
         "recall_minority_mean": [v['test_recall_minority'][0] for v in model_result_set.values()],
     })
+    
+def select_best_model(dataset_name: str, result_dataset: pd.DataFrame):
+    filtered_dataset = result_dataset[result_dataset["dataset"].str.contains(dataset_name)]
+    max_f1_value = filtered_dataset["f1_mean"].max()
+    selected_row = filtered_dataset[filtered_dataset["f1_mean"] == max_f1_value].iloc[0, :2]
+    selected_model_name = selected_row["dataset"] + "_" + selected_row["model"]
+    selected_model = joblib.load(f'{MODEL_DIR}/{selected_model_name}.joblib')
+    return selected_model, max_f1_value
