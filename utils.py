@@ -10,6 +10,7 @@ from sklearn.impute import SimpleImputer
 import pickle
 
 RANDOM_STATE = 42
+TEST_SIZE = 0.2
 
 def preprocess_statlog(df: pd.DataFrame, scale: bool) -> tuple:
     df_new = df.copy()
@@ -882,6 +883,9 @@ def plot_numerical_heatmap(df: pd.DataFrame, numerical_cols: list):
 def set_unscaled(df: pd.DataFrame, dataset_name: str):
     df.to_csv(f'data/unscaled/{dataset_name}.csv', index=False)
     
+def set_test(df: pd.DataFrame, dataset_name: str):
+    df.to_csv(f'data/test/{dataset_name}.csv', index=False)
+    
 def set_unscaled_combined(df: pd.DataFrame):
     dataset_name = df.attrs.get('dataset_name', 'Combined').lower()
     df.to_csv(f'data/unscaled/combined/{dataset_name}.csv', index=False)
@@ -926,6 +930,11 @@ def get_preprocessed(dataset_name: str, scaler_name: str) -> tuple:
     with open(f'scaler/{scaler_name}.pkl', 'rb') as f:
         scaler = pickle.load(f)
     return df, scaler
+
+def get_test(dataset_name: str) -> pd.DataFrame:
+    df = pd.read_csv(f'data/test/{dataset_name}.csv')
+    df.attrs['dataset_name'] = dataset_name
+    return df
 
 def get_preprocessed_combined(dataset_name: str, scaler_name: str) -> pd.DataFrame:
     df = pd.read_csv(f'data/processed/combined/{dataset_name}.csv')

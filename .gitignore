@@ -9,6 +9,8 @@ data/unscaled/*.csv
 data/processed/*.csv
 data/processed/combined/*.csv
 
+data/test/*.csv
+
 model/*.joblib
 
 result/*.csv
