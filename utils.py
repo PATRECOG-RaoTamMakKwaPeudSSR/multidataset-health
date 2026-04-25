@@ -1098,3 +1098,47 @@ def load_baseline_model(dataset_name: str, model_name: str):
 def load_concat_model(concat_name: str, model_name: str):
     path = f"{MODEL_DIR}/{concat_name}_{model_name}.joblib"
     return joblib.load(path)
+
+# ===========================================================================
+# FEATURE_IMPORTANCE
+
+import shap
+
+def get_clf(model):
+    """Unwrap SMOTE pipeline to get the classifier."""
+    if hasattr(model, 'named_steps'):
+        return model.named_steps['clf']
+    return model
+
+def compute_shap(model, X):
+    clf = get_clf(model)
+    name = type(clf).__name__.lower()
+
+    if any(t in name for t in ('decision', 'forest', 'lgbm')):
+        vals = shap.TreeExplainer(clf).shap_values(X)
+        if isinstance(vals, list):
+            return vals[1]
+        if vals.ndim == 3:
+            return vals[:, :, 1]
+        return vals
+    elif 'xgb' in name:
+        bg = shap.sample(X, min(200, len(X)), random_state=42)
+        vals = shap.PermutationExplainer(clf.predict_proba, bg).shap_values(X)
+        return vals[1] if isinstance(vals, list) else vals[:, :, 1] if vals.ndim == 3 else vals
+    elif 'logistic' in name:
+        return shap.LinearExplainer(clf, X).shap_values(X)
+    else:
+        bg = shap.sample(X, min(100, len(X)), random_state=42)
+        vals = shap.KernelExplainer(clf.predict_proba, bg).shap_values(
+            bg, nsamples=100, silent=True)
+        if isinstance(vals, list):
+            return vals[1]
+        if vals.ndim == 3:
+            return vals[:, :, 1]
+        return vals
+    
+def mean_abs_shap(shap_vals: np.ndarray, feature_names) -> pd.Series:
+    return (
+        pd.Series(np.abs(shap_vals).mean(axis=0), index=feature_names)
+        .sort_values(ascending=False)
+    )
