@@ -14,3 +14,4 @@ data/test/*.csv
 model/*.joblib
 
 result/*.csv
+result/images/*.png

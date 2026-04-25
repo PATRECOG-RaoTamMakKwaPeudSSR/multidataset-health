@@ -1040,22 +1040,61 @@ def train_dataset(dataset_name: str, df: pd.DataFrame, scaler: MinMaxScaler, cv:
 
     return results
 
-def show_result(model_result_set: set):
-    return pd.DataFrame({
-        "dataset": ["_".join(k.split("_")[:-1]) for k in model_result_set.keys()],
-        "model": [k.split("_")[-1] for k in model_result_set.keys()],
-        'accuracy_mean': [v['test_accuracy'][0] for v in model_result_set.values()],
-        # 'precision_mean': [v['test_precision'][0] for v in model_result_set.values()],
-        # 'recall_mean': [v['test_recall'][0] for v in model_result_set.values()],
-        "f1_mean": [v['test_f1'][0] for v in model_result_set.values()],
-        "f1_macro_mean": [v['test_f1_macro'][0] for v in model_result_set.values()],
-        "recall_minority_mean": [v['test_recall_minority'][0] for v in model_result_set.values()],
-    })
+# def show_result(model_result_set: set):
+#     return pd.DataFrame({
+#         "dataset": ["_".join(k.split("_")[:-1]) for k in model_result_set.keys()],
+#         "model": [k.split("_")[-1] for k in model_result_set.keys()],
+#         'accuracy_mean': [v['test_accuracy'][0] for v in model_result_set.values()],
+#         # 'precision_mean': [v['test_precision'][0] for v in model_result_set.values()],
+#         # 'recall_mean': [v['test_recall'][0] for v in model_result_set.values()],
+#         "f1_mean": [v['test_f1'][0] for v in model_result_set.values()],
+#         "f1_macro_mean": [v['test_f1_macro'][0] for v in model_result_set.values()],
+#         "recall_minority_mean": [v['test_recall_minority'][0] for v in model_result_set.values()],
+#     })
+
+# ===========================================================================
+# EVALUATE
+from sklearn.metrics import accuracy_score, f1_score, recall_score, precision_score, classification_report, confusion_matrix
+
+def evaluate_on_test(model, X_test, y_test) -> dict:
+    y_pred = model.predict(X_test)
+    return {
+        'accuracy': accuracy_score(y_test, y_pred),
+        'f1_weighted': f1_score(y_test, y_pred, average='weighted', zero_division=0),
+        'f1_macro': f1_score(y_test, y_pred, average='macro', zero_division=0),
+        'recall_minority': recall_score(y_test, y_pred, pos_label=1, average='binary', zero_division=0),
+    }
+
+
+def align_test_to_train(df_test: pd.DataFrame, df_train: pd.DataFrame, scaler: MinMaxScaler) -> tuple:
+    train_cols = [c for c in df_train.columns if c != 'target']
+    df_aligned = df_test.copy()
     
-def select_best_model(dataset_name: str, result_dataset: pd.DataFrame):
-    filtered_dataset = result_dataset[result_dataset["dataset"].str.contains(dataset_name)]
-    max_f1_value = filtered_dataset["f1_mean"].max()
-    selected_row = filtered_dataset[filtered_dataset["f1_mean"] == max_f1_value].iloc[0, :2]
-    selected_model_name = selected_row["dataset"] + "_" + selected_row["model"]
-    selected_model = joblib.load(f'{MODEL_DIR}/{selected_model_name}.joblib')
-    return selected_model, max_f1_value
+    # เติม columns ที่ขาด
+    for col in train_cols:
+        if col not in df_aligned.columns:
+            df_aligned[col] = 0
+    
+    # drop columns ที่เกิน
+    extra = [c for c in df_aligned.columns if c not in train_cols + ['target']]
+    df_aligned.drop(columns=extra, inplace=True)
+    
+    X = df_aligned[train_cols]
+    y = df_aligned['target']
+    
+    # scaling
+    try:
+        X_scaled = scaler.transform(X)
+        X_scaled = pd.DataFrame(X_scaled, columns=train_cols, index=X.index)
+    except Exception:
+        X_scaled = X
+    
+    return X_scaled, y
+
+def load_baseline_model(dataset_name: str, model_name: str):
+    path = f"{MODEL_DIR}/{dataset_name}_{model_name}.joblib"
+    return joblib.load(path)
+
+def load_concat_model(concat_name: str, model_name: str):
+    path = f"{MODEL_DIR}/{concat_name}_{model_name}.joblib"
+    return joblib.load(path)
