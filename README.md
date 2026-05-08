@@ -13,3 +13,4 @@
 | Stroke                 | 26-stroke.csv     | [Stroke Dataset](https://www.kaggle.com/datasets/fedesoriano/stroke-prediction-dataset)          |
 
 ---
+Note: You should run all .ipynb files sequentially to get information
